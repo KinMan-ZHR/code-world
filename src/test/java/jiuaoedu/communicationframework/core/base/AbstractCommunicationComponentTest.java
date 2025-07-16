@@ -1,38 +1,69 @@
 package jiuaoedu.communicationframework.core.base;
 
-import com.jiuaoedu.communicationframework.api.communicator.Communicable;
-import com.jiuaoedu.communicationframework.api.mediator.Mediator;
 import com.jiuaoedu.communicationframework.api.message.Message;
+import com.jiuaoedu.communicationframework.api.message.MessageBuilder;
 import com.jiuaoedu.communicationframework.api.message.MessageType;
 import com.jiuaoedu.communicationframework.core.base.AbstractCommunicationComponent;
-import org.junit.Test;
+import com.jiuaoedu.communicationframework.core.base.SystemMediator;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class AbstractCommunicationComponentTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class AbstractCommunicationComponentTest {
+    private SystemMediator mediator;
+    private TestComponent component;
+
+    @BeforeEach
+    void setUp() {
+        mediator = new SystemMediator();
+        component = new TestComponent("testComponent");
+        component.setMediator(mediator);
+    }
 
     @Test
-    public void test() {
-        Mediator mediator = new SystemMediator();
+    void testSendMessage() {
+        Message message = new MessageBuilder()
+            .from(component.getComponentId())
+            .to("receiver")
+            .withContent("Test Send")
+            .ofType(MessageType.EVENT)
+            .build();
+            
+        component.sendMessage(message);
+        
+        // 验证中介者收到消息
+        assertEquals(1, mediator.getMessageStats().get("EVENT"));
+    }
 
-        Communicable client = new AbstractCommunicationComponent("client") {
-            @Override
-            protected void processMessage(Message message) {
-                System.out.println("客户端收到响应: " + message.getContent());
-            }
-        };
+    @Test
+    void testReceiveMessage() {
+        Message message = new MessageBuilder()
+            .from("sender")
+            .to(component.getComponentId())
+            .withContent("Test Receive")
+            .ofType(MessageType.NOTIFICATION)
+            .build();
+            
+        // 直接通过中介者发送消息
+        mediator.dispatchMessage(message);
+        
+        // 验证组件收到消息
+        assertTrue(component.receivedMessages.contains("Test Receive"));
+    }
 
-        Communicable userService = new UserService("userService");
+    private static class TestComponent extends AbstractCommunicationComponent {
+        public final java.util.List<String> receivedMessages = new java.util.ArrayList<>();
 
-        client.setMediator(mediator);
-        userService.setMediator(mediator);
+        public TestComponent(String componentId) {
+            super(componentId);
+        }
 
-        // 发送查询请求
-        Message request = new Message(
-                "client",
-                "userService",
-                "查询用户张三",
-                MessageType.REQUEST
-        );
-
-        client.sendMessage(request);
+        @Override
+        protected void processMessage(Message message) {
+            receivedMessages.add(message.getContent());
+        }
     }
 }
+

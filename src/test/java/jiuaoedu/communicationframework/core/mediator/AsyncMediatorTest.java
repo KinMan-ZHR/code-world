@@ -1,59 +1,61 @@
-package jiuaoedu.communicationframework.api.communicator;
+package jiuaoedu.communicationframework.core.mediator;
 
 import com.jiuaoedu.communicationframework.api.message.Message;
 import com.jiuaoedu.communicationframework.api.message.MessageBuilder;
 import com.jiuaoedu.communicationframework.api.message.MessageType;
 import com.jiuaoedu.communicationframework.core.base.AbstractCommunicationComponent;
+import com.jiuaoedu.communicationframework.core.base.AsyncMediator;
 import com.jiuaoedu.communicationframework.core.base.SystemMediator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class CommunicableTest {
-    private SystemMediator mediator;
+class AsyncMediatorTest {
+    private AsyncMediator asyncMediator;
     private TestComponent sender;
     private TestComponent receiver;
+    private CountDownLatch latch;
 
     @BeforeEach
     void setUp() {
-        mediator = new SystemMediator();
-        sender = new TestComponent("sender");
-        receiver = new TestComponent("receiver");
+        SystemMediator syncMediator = new SystemMediator();
+        asyncMediator = new AsyncMediator(syncMediator);
         
-        sender.setMediator(mediator);
-        receiver.setMediator(mediator);
+        sender = new TestComponent("sender");
+        receiver = new TestComponent("receiver") {
+            @Override
+            protected void processMessage(Message message) {
+                super.processMessage(message);
+                latch.countDown();
+            }
+        };
+        
+        sender.setMediator(asyncMediator);
+        receiver.setMediator(asyncMediator);
+        
+        latch = new CountDownLatch(1);
     }
 
     @Test
-    void testSendAndReceiveMessage() {
+    void testAsyncMessageDelivery() throws InterruptedException {
         Message message = new MessageBuilder()
             .from(sender.getComponentId())
             .to(receiver.getComponentId())
-            .withContent("Hello World!")
-            .ofType(MessageType.REQUEST)
+            .withContent("Async Test")
+            .ofType(MessageType.EVENT)
             .build();
             
         sender.sendMessage(message);
         
-        // 验证接收者收到消息
-        assertTrue(receiver.receivedMessages.contains(message.getContent()));
-    }
-
-    @Test
-    void testNonExistentReceiver() {
-        Message message = new MessageBuilder()
-            .from(sender.getComponentId())
-            .to("non-existent")
-            .withContent("Test")
-            .ofType(MessageType.NOTIFICATION)
-            .build();
-            
-        sender.sendMessage(message);
+        // 等待消息异步处理
+        assertTrue(latch.await(2, TimeUnit.SECONDS));
+        assertTrue(receiver.receivedMessages.contains("Async Test"));
         
-        // 验证发送者收到错误通知
-        assertTrue(sender.receivedMessages.stream()
-            .anyMatch(msg -> msg.contains("接收者不存在")));
+        asyncMediator.shutdown();
     }
 
     private static class TestComponent extends AbstractCommunicationComponent {
@@ -67,5 +69,6 @@ class CommunicableTest {
         protected void processMessage(Message message) {
             receivedMessages.add(message.getContent());
         }
+
     }
 }

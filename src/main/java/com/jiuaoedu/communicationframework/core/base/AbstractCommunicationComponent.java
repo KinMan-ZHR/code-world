@@ -15,12 +15,19 @@ public abstract class AbstractCommunicationComponent implements Communicable, Me
 
     @Override
     public final void sendMessage(Message message) {
-        if (mediator != null) {
-            System.out.println(getComponentId() + " 发送" + message.getType() + "消息: " + message.getContent());
-            mediator.dispatchMessage(message);
-        } else {
-            throw new IllegalStateException("中介者未设置，无法发送消息");
+        if (mediator == null) {
+            throw new IllegalStateException("Mediator not set. Cannot send message.");
         }
+        System.out.println("[发送] " + getComponentId() + " -> " + message.getReceiverId() +
+                " [" + message.getType() + "]: " + message.getContent());
+        mediator.dispatchMessage(message);
+    }
+
+    @Override
+    public final void receiveMessage(Message message) {
+        System.out.println("[接收] " + getComponentId() + " <- " + message.getSenderId() +
+                " [" + message.getType() + "]: " + message.getContent());
+        processMessage(message);
     }
 
     @Override
@@ -32,21 +39,14 @@ public abstract class AbstractCommunicationComponent implements Communicable, Me
     @Override
     public final void registerToMediator(Mediator mediator) {
         mediator.registerComponent(this);
-        System.out.println(getComponentId() + " 已注册到中介者");
+        System.out.println("已注册组件: " + getComponentId() + " 到中介者");
     }
 
     @Override
     public final String getComponentId() {
+
         return componentId;
     }
 
-    // 留给子类实现的业务逻辑
     protected abstract void processMessage(Message message);
-
-    @Override
-    public final void receiveMessage(Message message) {
-        System.out.println(getComponentId() + " 收到" + message.getType() + "消息来自 " + 
-                          message.getSenderId() + ": " + message.getContent());
-        processMessage(message);
-    }
 }
