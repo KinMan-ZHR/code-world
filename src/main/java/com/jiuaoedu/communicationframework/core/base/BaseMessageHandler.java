@@ -2,8 +2,11 @@ package com.jiuaoedu.communicationframework.core.base;
 
 import com.jiuaoedu.communicationframework.api.communicator.MessageHandler;
 import com.jiuaoedu.communicationframework.api.message.Message;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class BaseMessageHandler implements MessageHandler {
+    private static final Logger log = LoggerFactory.getLogger(BaseMessageHandler.class);
     private MessageHandler nextHandler;
 
     public BaseMessageHandler setNextHandler(MessageHandler nextHandler) {
@@ -18,7 +21,7 @@ public abstract class BaseMessageHandler implements MessageHandler {
         } else if (nextHandler != null) {
             nextHandler.handleMessage(message);
         } else {
-            System.err.println("没有处理器可以处理消息: " + message);
+            log.error("没有处理器可以处理消息: {}", message);
         }
     }
 

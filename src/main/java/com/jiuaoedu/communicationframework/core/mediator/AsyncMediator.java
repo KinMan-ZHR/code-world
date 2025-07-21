@@ -1,4 +1,4 @@
-package com.jiuaoedu.communicationframework.core.base;
+package com.jiuaoedu.communicationframework.core.mediator;
 
 import com.jiuaoedu.communicationframework.api.communicator.Communicable;
 import com.jiuaoedu.communicationframework.api.mediator.Mediator;
@@ -13,7 +13,7 @@ public class AsyncMediator implements Mediator {
 
     public AsyncMediator(Mediator delegate) {
         this.delegate = delegate;
-        this.threadPool = ThreadPoolUtil.createFixedThreadPool(10, "async-mediator");
+        this.threadPool = ThreadPoolUtil.createFixedThreadPool(10, "async-mediator",20);
     }
 
     @Override

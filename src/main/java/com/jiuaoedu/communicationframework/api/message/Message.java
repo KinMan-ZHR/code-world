@@ -1,6 +1,8 @@
 package com.jiuaoedu.communicationframework.api.message;
 
 
+import com.jiuaoedu.communicationframework.utils.IdGenerator;
+
 import java.time.LocalDateTime;
 
 public class Message {
@@ -21,7 +23,7 @@ public class Message {
     }
 
     private String generateUniqueId() {
-        return java.util.UUID.randomUUID().toString();
+        return IdGenerator.generateUniqueId();
     }
 
     // Getters

@@ -1,6 +1,10 @@
 package com.jiuaoedu.communicationframework.utils;
 
 public class ValidationUtil {
+
+    private ValidationUtil() {
+        throw new AssertionError("No instances.");
+    }
     public static void validateNotNull(Object object, String message) {
         if (object == null) {
             throw new IllegalArgumentException(message);

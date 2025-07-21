@@ -1,15 +1,18 @@
-package com.jiuaoedu.communicationframework.core.base;
+package com.jiuaoedu.communicationframework.core.mediator;
 
 import com.jiuaoedu.communicationframework.api.communicator.Communicable;
 import com.jiuaoedu.communicationframework.api.mediator.Mediator;
 import com.jiuaoedu.communicationframework.api.message.Message;
 import com.jiuaoedu.communicationframework.extension.interceptor.AuthInterceptor;
 import com.jiuaoedu.communicationframework.extension.interceptor.MessageInterceptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SecureMediator implements Mediator {
+    private static final Logger log = LoggerFactory.getLogger(SecureMediator.class);
     private final Mediator delegate;
     private final List<MessageInterceptor> interceptors = new ArrayList<>();
 
@@ -37,7 +40,7 @@ public class SecureMediator implements Mediator {
     public void dispatchMessage(Message message) {
         for (MessageInterceptor interceptor : interceptors) {
             if (!interceptor.preHandle(message)) {
-                System.out.println("消息被拦截: " + message);
+                log.warn("消息被拦截: {}", message);
                 return;
             }
         }

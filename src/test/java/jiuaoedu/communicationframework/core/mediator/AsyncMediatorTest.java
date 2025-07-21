@@ -4,8 +4,8 @@ import com.jiuaoedu.communicationframework.api.message.Message;
 import com.jiuaoedu.communicationframework.api.message.MessageBuilder;
 import com.jiuaoedu.communicationframework.api.message.MessageType;
 import com.jiuaoedu.communicationframework.core.base.AbstractCommunicationComponent;
-import com.jiuaoedu.communicationframework.core.base.AsyncMediator;
-import com.jiuaoedu.communicationframework.core.base.SystemMediator;
+import com.jiuaoedu.communicationframework.core.mediator.AsyncMediator;
+import com.jiuaoedu.communicationframework.core.mediator.SystemMediator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

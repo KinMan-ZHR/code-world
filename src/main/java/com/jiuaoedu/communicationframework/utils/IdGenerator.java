@@ -3,6 +3,10 @@ package com.jiuaoedu.communicationframework.utils;
 import java.util.UUID;
 
 public class IdGenerator {
+
+    private IdGenerator() {
+        throw new IllegalStateException("Utility class");
+    }
     public static String generateUniqueId() {
         return UUID.randomUUID().toString();
     }

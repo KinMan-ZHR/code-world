@@ -4,12 +4,15 @@ import com.jiuaoedu.communicationframework.api.communicator.Communicable;
 import com.jiuaoedu.communicationframework.api.communicator.MediatorRegistrable;
 import com.jiuaoedu.communicationframework.api.mediator.Mediator;
 import com.jiuaoedu.communicationframework.api.message.Message;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractCommunicationComponent implements Communicable, MediatorRegistrable {
     private Mediator mediator;
     private final String componentId;
+    private static final Logger logger = LoggerFactory.getLogger(AbstractCommunicationComponent.class);
 
-    public AbstractCommunicationComponent(String componentId) {
+    protected AbstractCommunicationComponent(String componentId) {
         this.componentId = componentId;
     }
 
@@ -18,15 +21,21 @@ public abstract class AbstractCommunicationComponent implements Communicable, Me
         if (mediator == null) {
             throw new IllegalStateException("Mediator not set. Cannot send message.");
         }
-        System.out.println("[发送] " + getComponentId() + " -> " + message.getReceiverId() +
-                " [" + message.getType() + "]: " + message.getContent());
+        logger.info("[发送] {} -> {} [{}]: {}",
+                getComponentId(),
+                message.getReceiverId(),
+                message.getType(),
+                message.getContent());
         mediator.dispatchMessage(message);
     }
 
     @Override
     public final void receiveMessage(Message message) {
-        System.out.println("[接收] " + getComponentId() + " <- " + message.getSenderId() +
-                " [" + message.getType() + "]: " + message.getContent());
+        logger.info("[接收] {} -> {} [{}]: {}",
+                getComponentId(),
+                message.getSenderId(),
+                message.getType(),
+                message.getContent());
         processMessage(message);
     }
 
@@ -39,12 +48,11 @@ public abstract class AbstractCommunicationComponent implements Communicable, Me
     @Override
     public final void registerToMediator(Mediator mediator) {
         mediator.registerComponent(this);
-        System.out.println("已注册组件: " + getComponentId() + " 到中介者");
+        logger.info("已注册组件: {} 到中介者", getComponentId());
     }
 
     @Override
     public final String getComponentId() {
-
         return componentId;
     }
 
