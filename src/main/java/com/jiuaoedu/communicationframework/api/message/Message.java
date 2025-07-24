@@ -1,6 +1,7 @@
 package com.jiuaoedu.communicationframework.api.message;
 
 
+import com.jiuaoedu.communicationframework.api.protocol.MessageProtocol;
 import com.jiuaoedu.communicationframework.utils.IdGenerator;
 
 import java.time.LocalDateTime;
@@ -12,14 +13,16 @@ public class Message {
     private final MessageType type;
     private final LocalDateTime timestamp;
     private final String messageId;
+    private final MessageProtocol protocol;
 
-    public Message(String senderId, String receiverId, String content, MessageType type) {
+    protected Message(String senderId, String receiverId, String content, MessageType type, MessageProtocol protocol) {
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.content = content;
         this.type = type;
         this.timestamp = LocalDateTime.now();
         this.messageId = generateUniqueId();
+        this.protocol = protocol;
     }
 
     private String generateUniqueId() {
@@ -33,6 +36,9 @@ public class Message {
     public MessageType getType() { return type; }
     public LocalDateTime getTimestamp() { return timestamp; }
     public String getMessageId() { return messageId; }
+    public String getOperationType() {
+        return protocol.extractOperationType(content);
+    }
 
     @Override
     public String toString() {
