@@ -1,6 +1,7 @@
 package com.jiuaoedu.communicationframework.extension.serializer;
 
 import com.jiuaoedu.communicationframework.api.message.Message;
+import com.jiuaoedu.communicationframework.api.message.MessageBuilder;
 import com.jiuaoedu.communicationframework.api.message.MessageType;
 import com.jiuaoedu.communicationframework.api.serializer.MessageSerializer;
 import org.w3c.dom.Document;
@@ -63,7 +64,12 @@ public class XmlSerializer implements MessageSerializer {
             String content = getElementValue(doc, "content");
             MessageType type = MessageType.valueOf(getElementValue(doc, "type"));
 
-            return new Message(senderId, receiverId, content, type);
+            return new MessageBuilder()
+                    .from(senderId)
+                    .to(receiverId)
+                    .withContent(content)
+                    .ofType(type)
+                    .build();
         } catch (Exception e) {
             throw new RuntimeException("XML反序列化失败", e);
         }

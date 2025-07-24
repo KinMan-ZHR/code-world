@@ -3,6 +3,7 @@ package com.jiuaoedu.communicationframework.core.mediator;
 import com.jiuaoedu.communicationframework.api.communicator.Communicable;
 import com.jiuaoedu.communicationframework.api.mediator.Mediator;
 import com.jiuaoedu.communicationframework.api.message.Message;
+import com.jiuaoedu.communicationframework.api.message.MessageBuilder;
 import com.jiuaoedu.communicationframework.api.message.MessageType;
 import com.jiuaoedu.communicationframework.core.base.BaseMessageHandler;
 import com.jiuaoedu.communicationframework.core.exception.MessageHandlingException;
@@ -66,13 +67,11 @@ public class SystemMediator implements Mediator {
     }
 
     private void sendErrorMessage(Message originalMessage, String errorMessageContent) {
-        Message errorMessage = new Message(
-            "系统",
-            originalMessage.getSenderId(),
-            errorMessageContent + originalMessage.getContent(),
-            MessageType.ERROR
-        );
-        
+        Message errorMessage = new MessageBuilder()
+                .fromMessage(originalMessage)
+                .from("系统")
+                .withContent(errorMessageContent + originalMessage.getContent())
+                .build();
         Communicable sender = components.get(originalMessage.getSenderId());
         if (sender != null) {
             sender.receiveMessage(errorMessage);
