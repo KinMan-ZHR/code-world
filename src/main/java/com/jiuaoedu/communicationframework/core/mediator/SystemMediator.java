@@ -4,7 +4,10 @@ import com.jiuaoedu.communicationframework.api.communicator.Communicable;
 import com.jiuaoedu.communicationframework.api.mediator.Mediator;
 import com.jiuaoedu.communicationframework.api.message.Message;
 import com.jiuaoedu.communicationframework.api.message.MessageType;
+import com.jiuaoedu.communicationframework.core.base.BaseMessageHandler;
 import com.jiuaoedu.communicationframework.core.exception.MessageHandlingException;
+import com.jiuaoedu.communicationframework.extension.strategy.EventBroadcastingStrategy;
+import com.jiuaoedu.communicationframework.extension.strategy.RequestResponseStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +19,18 @@ public class SystemMediator implements Mediator {
     private static final Logger log = LoggerFactory.getLogger(SystemMediator.class);
     private final Map<String, Communicable> components = new ConcurrentHashMap<>();
     private final Map<String, Long> messageStats = new HashMap<>();
+    private final BaseMessageHandler strategyChain;
+
+    public SystemMediator() {
+        // 构建策略链
+        RequestResponseStrategy requestResponseStrategy = new RequestResponseStrategy();
+        EventBroadcastingStrategy eventBroadcastingStrategy = new EventBroadcastingStrategy();
+        strategyChain = requestResponseStrategy.setNextHandler(eventBroadcastingStrategy);
+    }
+
+    public SystemMediator(BaseMessageHandler messageHandlerChain) {
+        this.strategyChain = messageHandlerChain;
+    }
 
     @Override
     public void registerComponent(Communicable component) {
@@ -40,6 +55,9 @@ public class SystemMediator implements Mediator {
             return;
         }
         try {
+            // 先让消息处理器链处理消息
+            strategyChain.handleMessage(message);
+            // 处理完后再发送消息给接收者
             receiver.receiveMessage(message);
         } catch (MessageHandlingException e) {
             log.error("消息处理异常: {}", e.getMessage());

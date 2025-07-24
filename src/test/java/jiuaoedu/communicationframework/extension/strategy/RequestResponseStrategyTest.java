@@ -26,19 +26,16 @@ class RequestResponseStrategyTest {
     @Test
     void testRequestResponseFlow() throws ExecutionException, InterruptedException, TimeoutException {
         // 注册请求处理器
-        strategy.registerRequestHandler("GET_DATA", new MessageHandler() {
-            @Override
-            public void handleMessage(Message message) {
-                Message response = new MessageBuilder()
-                    .from("service")
-                    .to(message.getSenderId())
-                    .withContent("DATA: [1, 2, 3]")
-                    .ofType(MessageType.RESPONSE)
-                    .build();
-                
-                // 模拟回复消息
-                strategy.handleResponse(response);
-            }
+        strategy.registerRequestHandler("GET_DATA", message -> {
+            Message response = new MessageBuilder()
+                .from("service")
+                .to(message.getSenderId())
+                .withContent("DATA: [1, 2, 3]")
+                .ofType(MessageType.RESPONSE)
+                .build();
+
+            // 模拟回复消息
+            strategy.handleResponse(response);
         });
         
         // 发送请求
@@ -52,7 +49,7 @@ class RequestResponseStrategyTest {
         CompletableFuture<Message> future = strategy.sendRequest(request);
         
         // 验证响应
-        Message response = future.get(2, TimeUnit.SECONDS);
+        Message response = future.get(1, TimeUnit.SECONDS);
         assertEquals("DATA: [1, 2, 3]", response.getContent());
     }
 

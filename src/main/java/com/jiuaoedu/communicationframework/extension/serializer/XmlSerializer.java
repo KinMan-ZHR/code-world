@@ -2,6 +2,7 @@ package com.jiuaoedu.communicationframework.extension.serializer;
 
 import com.jiuaoedu.communicationframework.api.message.Message;
 import com.jiuaoedu.communicationframework.api.message.MessageType;
+import com.jiuaoedu.communicationframework.api.serializer.MessageSerializer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;

@@ -1,4 +1,4 @@
-package com.jiuaoedu.communicationframework.extension.serializer;
+package com.jiuaoedu.communicationframework.api.serializer;
 
 import com.jiuaoedu.communicationframework.api.message.Message;
 

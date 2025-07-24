@@ -7,6 +7,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.jiuaoedu.communicationframework.api.message.Message;
 import com.jiuaoedu.communicationframework.api.message.MessageType;
+import com.jiuaoedu.communicationframework.api.serializer.MessageSerializer;
 
 import java.io.IOException;
 import java.time.LocalDateTime;

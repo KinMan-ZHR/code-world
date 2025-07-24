@@ -1,7 +1,7 @@
 package com.jiuaoedu.communicationframework.core.base;
 
 import com.jiuaoedu.communicationframework.api.communicator.Communicable;
-import com.jiuaoedu.communicationframework.api.communicator.MediatorRegistrable;
+import com.jiuaoedu.communicationframework.api.mediator.MediatorRegistrable;
 import com.jiuaoedu.communicationframework.api.mediator.Mediator;
 import com.jiuaoedu.communicationframework.api.message.Message;
 import org.slf4j.Logger;

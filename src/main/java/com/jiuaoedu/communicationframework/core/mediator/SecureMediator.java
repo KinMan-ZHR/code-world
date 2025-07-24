@@ -1,17 +1,18 @@
 package com.jiuaoedu.communicationframework.core.mediator;
 
 import com.jiuaoedu.communicationframework.api.communicator.Communicable;
+import com.jiuaoedu.communicationframework.api.mediator.ISecureMediator;
 import com.jiuaoedu.communicationframework.api.mediator.Mediator;
 import com.jiuaoedu.communicationframework.api.message.Message;
 import com.jiuaoedu.communicationframework.extension.interceptor.AuthInterceptor;
-import com.jiuaoedu.communicationframework.extension.interceptor.MessageInterceptor;
+import com.jiuaoedu.communicationframework.api.interceptor.MessageInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SecureMediator implements Mediator {
+public class SecureMediator implements ISecureMediator {
     private static final Logger log = LoggerFactory.getLogger(SecureMediator.class);
     private final Mediator delegate;
     private final List<MessageInterceptor> interceptors = new ArrayList<>();

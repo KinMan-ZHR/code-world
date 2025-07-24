@@ -1,4 +1,4 @@
-package com.jiuaoedu.communicationframework.extension.interceptor;
+package com.jiuaoedu.communicationframework.api.interceptor;
 
 import com.jiuaoedu.communicationframework.api.message.Message;
 

@@ -1,6 +1,5 @@
 package com.jiuaoedu.communicationframework.extension.strategy;
 
-
 import com.jiuaoedu.communicationframework.api.communicator.MessageHandler;
 import com.jiuaoedu.communicationframework.api.message.Message;
 import com.jiuaoedu.communicationframework.api.message.MessageType;
@@ -9,8 +8,6 @@ import com.jiuaoedu.communicationframework.utils.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RequestResponseStrategy extends BaseMessageHandler {
     private static final Logger log = LoggerFactory.getLogger(RequestResponseStrategy.class);
     private final Map<String, CompletableFuture<Message>> pendingRequests = new ConcurrentHashMap<>();
-    private final Map<String, MessageHandler> requestHandlers = new HashMap<>();
+    private final Map<String, MessageHandler> requestHandlers = new ConcurrentHashMap<>();
 
     @Override
     protected boolean canHandle(Message message) {
@@ -71,10 +68,11 @@ public class RequestResponseStrategy extends BaseMessageHandler {
         
         CompletableFuture<Message> future = new CompletableFuture<>();
         pendingRequests.put(correlationId, future);
-        
-        // 假设这里有一个sender可以发送消息
-//         sender.sendMessage(enrichedRequest);
-        
+
+//        if (mediator != null) {
+//            mediator.dispatchMessage(enrichedRequest);
+//        }
+//
         return future;
     }
 

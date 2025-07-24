@@ -6,12 +6,12 @@ import com.jiuaoedu.communicationframework.api.message.MessageType;
 import com.jiuaoedu.communicationframework.core.base.BaseMessageHandler;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class EventBroadcastingStrategy extends BaseMessageHandler {
-    private final Map<String, List<MessageHandler>> eventListeners = new HashMap<>();
+    private final Map<String, List<MessageHandler>> eventListeners = new ConcurrentHashMap<>();
 
     @Override
     protected boolean canHandle(Message message) {

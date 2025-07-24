@@ -1,5 +1,6 @@
 package com.jiuaoedu.communicationframework.extension.interceptor;
 
+import com.jiuaoedu.communicationframework.api.interceptor.MessageInterceptor;
 import com.jiuaoedu.communicationframework.api.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

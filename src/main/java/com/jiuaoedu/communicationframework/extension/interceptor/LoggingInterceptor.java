@@ -1,11 +1,12 @@
 package com.jiuaoedu.communicationframework.extension.interceptor;
 
+import com.jiuaoedu.communicationframework.api.interceptor.MessageInterceptor;
 import com.jiuaoedu.communicationframework.api.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class LoggingInterceptor implements MessageInterceptor {
-    private static final Logger logger = LoggerFactory.getLogger(LoggingInterceptor.class);
+    private final Logger logger = LoggerFactory.getLogger(LoggingInterceptor.class);
 
     @Override
     public boolean preHandle(Message message) {

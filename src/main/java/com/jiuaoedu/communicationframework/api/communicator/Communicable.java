@@ -2,6 +2,9 @@ package com.jiuaoedu.communicationframework.api.communicator;
 
 import com.jiuaoedu.communicationframework.api.mediator.Mediator;
 import com.jiuaoedu.communicationframework.api.message.Message;
+
+import java.util.EventListener;
+
 /**
  * @author ZhangHaoRan or KinMan Zhang
  * @since 2025/7/16 14:38
