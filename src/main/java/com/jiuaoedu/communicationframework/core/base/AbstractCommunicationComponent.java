@@ -40,20 +40,25 @@ public abstract class AbstractCommunicationComponent implements Communicable, Me
     }
 
     @Override
-    public final void setMediator(Mediator mediator) {
-        this.mediator = mediator;
-        registerToMediator(mediator);
+    public final String getComponentId() {
+        return componentId;
     }
 
     @Override
     public final void registerToMediator(Mediator mediator) {
-        mediator.registerComponent(this);
-        logger.info("已注册组件: {} 到中介者", getComponentId());
+        if (this.mediator != null) {
+            logger.warn("组件已注册到中介者，重复注册将覆盖之前的中介者");
+        }
+        this.mediator = mediator;           // 设置中介者引用
+        mediator.registerComponent(this);   // 通知中介者注册
+        onRegistered();                     // 注册后的回调（子类可扩展）
     }
 
-    @Override
-    public final String getComponentId() {
-        return componentId;
+    /**
+     * 注册后的回调方法，子类可扩展
+     */
+    protected void onRegistered() {
+        // 默认空实现，子类可重写
     }
 
     protected abstract void processMessage(Message message);

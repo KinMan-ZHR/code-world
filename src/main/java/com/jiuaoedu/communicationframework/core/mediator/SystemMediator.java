@@ -4,7 +4,6 @@ import com.jiuaoedu.communicationframework.api.communicator.Communicable;
 import com.jiuaoedu.communicationframework.api.mediator.Mediator;
 import com.jiuaoedu.communicationframework.api.message.Message;
 import com.jiuaoedu.communicationframework.api.message.MessageBuilder;
-import com.jiuaoedu.communicationframework.api.message.MessageType;
 import com.jiuaoedu.communicationframework.core.base.BaseMessageHandler;
 import com.jiuaoedu.communicationframework.core.exception.MessageHandlingException;
 import com.jiuaoedu.communicationframework.extension.strategy.EventBroadcastingStrategy;
@@ -35,8 +34,12 @@ public class SystemMediator implements Mediator {
 
     @Override
     public void registerComponent(Communicable component) {
-        components.put(component.getComponentId(), component);
-       log.info("注册组件: {}", component.getComponentId());
+        String componentId = component.getComponentId();
+        if (components.containsKey(componentId)) {
+            log.warn("组件已存在，将覆盖: {}", componentId);
+        }
+        components.put(componentId, component);
+        log.info("注册组件: {}", componentId);
     }
 
     @Override
