@@ -1,6 +1,5 @@
 package com.jiuaoedu.communicationframework.api.message;
 
-
 import com.jiuaoedu.communicationframework.api.protocol.MessageProtocol;
 import com.jiuaoedu.communicationframework.utils.IdGenerator;
 
@@ -29,7 +28,6 @@ public class Message {
         return IdGenerator.generateUniqueId();
     }
 
-    // Getters
     public String getSenderId() { return senderId; }
     public String getReceiverId() { return receiverId; }
     public String getContent() { return content; }
