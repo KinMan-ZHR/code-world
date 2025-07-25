@@ -1,39 +1,38 @@
 package com.jiuaoedu.framework.communication.extension.strategy;
 
-import com.jiuaoedu.framework.communication.api.message.handler.MessageHandler;
 import com.jiuaoedu.framework.communication.api.message.Message;
 import com.jiuaoedu.framework.communication.api.message.MessageType;
-import com.jiuaoedu.framework.communication.core.message_handler.BaseMessageHandler;
+import com.jiuaoedu.framework.handler.api.IHandler;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class EventBroadcastingStrategy extends BaseMessageHandler {
-    private final Map<String, List<MessageHandler>> eventListeners = new ConcurrentHashMap<>();
+public class EventBroadcastingStrategy implements IHandler<Message> {
+    private final Map<String, List<IHandler<Message>>> eventListeners = new ConcurrentHashMap<>();
 
     @Override
-    protected boolean canHandle(Message message) {
+    public boolean canHandle(Message message) {
         return message.getType() == MessageType.EVENT;
     }
 
     @Override
-    protected void doHandle(Message message) {
+    public void handle(Message message) {
         String eventType = extractEventType(message.getContent());
-        List<MessageHandler> handlers = eventListeners.getOrDefault(eventType, new ArrayList<>());
+        List<IHandler<Message>> handlers = eventListeners.getOrDefault(eventType, new ArrayList<>());
         
-        for (MessageHandler handler : handlers) {
-            handler.handleMessage(message);
+        for (IHandler<Message> handler : handlers) {
+            handler.handle(message);
         }
     }
 
-    public void addEventListener(String eventType, MessageHandler listener) {
+    public void addEventListener(String eventType, IHandler<Message> listener) {
         eventListeners.computeIfAbsent(eventType, k -> new ArrayList<>()).add(listener);
     }
 
-    public void removeEventListener(String eventType, MessageHandler listener) {
-        List<MessageHandler> handlers = eventListeners.get(eventType);
+    public void removeEventListener(String eventType, IHandler<Message> listener) {
+        List<IHandler<Message>> handlers = eventListeners.get(eventType);
         if (handlers != null) {
             handlers.remove(listener);
         }

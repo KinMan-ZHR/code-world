@@ -1,29 +1,28 @@
 package com.jiuaoedu.framework.communication.extension.strategy;
 
-import com.jiuaoedu.framework.communication.api.message.handler.MessageHandler;
 import com.jiuaoedu.framework.communication.api.message.Message;
 import com.jiuaoedu.framework.communication.api.message.MessageBuilder;
 import com.jiuaoedu.framework.communication.api.message.MessageType;
-import com.jiuaoedu.framework.communication.core.message_handler.BaseMessageHandler;
 import com.jiuaoedu.framework.communication.core.exception.RequestNotFoundException;
 import com.jiuaoedu.framework.communication.utils.IdGenerator;
+import com.jiuaoedu.framework.handler.api.IHandler;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class RequestResponseStrategy extends BaseMessageHandler {
+public class RequestResponseStrategy implements IHandler<Message> {
     private final Map<String, CompletableFuture<Message>> pendingRequests = new ConcurrentHashMap<>();
-    private final Map<String, MessageHandler> requestHandlers = new ConcurrentHashMap<>();
+    private final Map<String, IHandler<Message>> requestHandlers = new ConcurrentHashMap<>();
 
     @Override
-    protected boolean canHandle(Message message) {
+    public boolean canHandle(Message message) {
         return message.getType() == MessageType.REQUEST ||
                message.getType() == MessageType.RESPONSE;
     }
 
     @Override
-    protected void doHandle(Message message) {
+    public void handle(Message message) {
         if (message.getType() == MessageType.REQUEST) {
             handleRequest(message);
         } else if (message.getType() == MessageType.RESPONSE) {
@@ -34,7 +33,7 @@ public class RequestResponseStrategy extends BaseMessageHandler {
     public void handleRequest(Message request) {
         String operationType = request.getOperationType();
         // 选择合适的子处理器处理
-        MessageHandler handler = requestHandlers.get(operationType);
+        IHandler<Message> handler = requestHandlers.get(operationType);
         String correlationId = IdGenerator.generateUniqueId();
         String enrichedContent = addCorrelationId(request.getContent(), correlationId);
         Message enrichedRequest = new MessageBuilder()
@@ -43,7 +42,7 @@ public class RequestResponseStrategy extends BaseMessageHandler {
                 .build();
         CompletableFuture<Message> future = new CompletableFuture<>();
         pendingRequests.put(correlationId, future);
-        handler.handleMessage(enrichedRequest);
+        handler.handle(enrichedRequest);
     }
 
     public void handleResponse(Message response) {
@@ -57,7 +56,7 @@ public class RequestResponseStrategy extends BaseMessageHandler {
         }
     }
 
-    public void registerRequestHandler(String requestType, MessageHandler handler) {
+    public void registerRequestHandler(String requestType, IHandler<Message> handler) {
         requestHandlers.put(requestType, handler);
     }
 

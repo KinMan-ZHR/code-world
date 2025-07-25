@@ -27,7 +27,6 @@ public class Message {
     private String generateUniqueId() {
         return IdGenerator.generateUniqueId();
     }
-
     public String getSenderId() { return senderId; }
     public String getReceiverId() { return receiverId; }
     public String getContent() { return content; }
