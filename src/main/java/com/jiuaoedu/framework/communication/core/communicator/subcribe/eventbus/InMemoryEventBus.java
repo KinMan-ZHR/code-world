@@ -1,9 +1,9 @@
-package com.jiuaoedu.framework.communication.core.communication_component.subcribe.eventbus;
+package com.jiuaoedu.framework.communication.core.communicator.subcribe.eventbus;
 
 import com.jiuaoedu.framework.communication.api.communicator.Communicable;
-import com.jiuaoedu.framework.communication.api.communicator.type.subcribe.EventBus;
+import com.jiuaoedu.framework.communication.api.communicator.type.subcribe.IEventBus;
 import com.jiuaoedu.framework.communication.api.communicator.type.subcribe.TopicSubscribable;
-import com.jiuaoedu.framework.communication.api.message.Message;
+import com.jiuaoedu.framework.communication.api.message.IMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,12 +12,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class InMemoryEventBus implements EventBus {
+public class InMemoryEventBus implements IEventBus {
     private final Map<String, Set<TopicSubscribable>> topicSubscribers = new ConcurrentHashMap<>();
     private static final Logger logger = LoggerFactory.getLogger(InMemoryEventBus.class);
 
     @Override
-    public void publish(String topic, Message message) {
+    public void publish(String topic, IMessage message) {
         logger.info("发布消息到主题: {}", topic);
         Set<TopicSubscribable> subscribers = topicSubscribers.getOrDefault(topic, Collections.emptySet());
         

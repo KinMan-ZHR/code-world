@@ -1,19 +1,19 @@
 package com.jiuaoedu.framework.communication.extension.interceptor;
 
-import com.jiuaoedu.framework.communication.api.interceptor.MessageInterceptor;
-import com.jiuaoedu.framework.communication.api.message.Message;
+import com.jiuaoedu.framework.communication.api.interceptor.IMessageInterceptor;
+import com.jiuaoedu.framework.communication.api.message.IMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class AuthInterceptor implements MessageInterceptor {
+public class AuthInterceptor implements IMessageInterceptor {
     private static final List<String> ADMIN_COMPONENTS = Arrays.asList("admin", "system");
     private static final Logger log = LoggerFactory.getLogger(AuthInterceptor.class);
 
     @Override
-    public boolean preHandle(Message message) {
+    public boolean preHandle(IMessage message) {
         // 模拟权限检查
         if (message.getType().name().startsWith("ADMIN_") && 
             !ADMIN_COMPONENTS.contains(message.getSenderId())) {
@@ -24,7 +24,7 @@ public class AuthInterceptor implements MessageInterceptor {
     }
 
     @Override
-    public void postHandle(Message message) {
+    public void postHandle(IMessage message) {
         // 权限检查不需要后置处理
     }
 }

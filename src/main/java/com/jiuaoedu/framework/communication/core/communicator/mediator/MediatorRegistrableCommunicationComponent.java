@@ -1,15 +1,16 @@
-package com.jiuaoedu.framework.communication.core.communication_component.mediator;
+package com.jiuaoedu.framework.communication.core.communicator.mediator;
 
 import com.jiuaoedu.framework.communication.api.communicator.Communicable;
 import com.jiuaoedu.framework.communication.api.communicator.type.mediator.MediatorRegistrable;
-import com.jiuaoedu.framework.communication.api.communicator.type.mediator.Mediator;
-import com.jiuaoedu.framework.communication.api.message.Message;
+import com.jiuaoedu.framework.communication.api.communicator.type.mediator.IMediator;
+import com.jiuaoedu.framework.communication.api.message.IMessage;
+import com.jiuaoedu.framework.communication.core.pojo.Message;
 import com.jiuaoedu.framework.communication.core.exception.CommunicationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MediatorRegistrableCommunicationComponent implements Communicable, MediatorRegistrable {
-    private Mediator mediator;
+    private IMediator mediator;
     private final String componentId;
     private static final Logger logger = LoggerFactory.getLogger(MediatorRegistrableCommunicationComponent.class);
 
@@ -18,7 +19,7 @@ public class MediatorRegistrableCommunicationComponent implements Communicable, 
     }
 
     @Override
-    public final void sendMessage(Message message) {
+    public final void sendMessage(IMessage message) {
         if (mediator == null) {
             throw new CommunicationException("Mediator not set. Cannot send message.");
         }
@@ -31,7 +32,7 @@ public class MediatorRegistrableCommunicationComponent implements Communicable, 
     }
 
     @Override
-    public final void receiveMessage(Message message) {
+    public final void receiveMessage(IMessage message) {
         logger.info("[接收] {} -> {} [{}]: {}",
                 getComponentId(),
                 message.getSenderId(),
@@ -46,7 +47,7 @@ public class MediatorRegistrableCommunicationComponent implements Communicable, 
     }
 
     @Override
-    public final void registerToMediator(Mediator mediator) {
+    public final void registerToMediator(IMediator mediator) {
         if (this.mediator != null) {
             logger.warn("组件已注册到中介者，重复注册将覆盖之前的中介者");
         }
@@ -67,7 +68,7 @@ public class MediatorRegistrableCommunicationComponent implements Communicable, 
      *
      * @param message 要处理的消息
      */
-    protected void processMessage(Message message){
+    protected void processMessage(IMessage message){
         // 默认空实现，子类可重写
     }
 }

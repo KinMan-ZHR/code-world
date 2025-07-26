@@ -1,8 +1,8 @@
 package com.jiuaoedu.framework.communication.api.message.serializer;
 
-import com.jiuaoedu.framework.communication.api.message.Message;
+import com.jiuaoedu.framework.communication.api.message.IMessage;
 
 public interface MessageSerializer {
-    String serialize(Message message);
-    Message deserialize(String serializedMessage);
+    String serialize(IMessage message);
+    IMessage deserialize(String serializedMessage);
 }

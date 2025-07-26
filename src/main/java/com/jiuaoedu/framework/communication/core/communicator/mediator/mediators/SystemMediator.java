@@ -1,47 +1,40 @@
-package com.jiuaoedu.framework.communication.core.communication_component.mediator.mediators;
+package com.jiuaoedu.framework.communication.core.communicator.mediator.mediators;
 
 import com.jiuaoedu.framework.communication.api.communicator.Communicable;
-import com.jiuaoedu.framework.communication.api.communicator.type.mediator.Mediator;
-import com.jiuaoedu.framework.communication.api.message.Message;
-import com.jiuaoedu.framework.communication.api.message.MessageBuilder;
+import com.jiuaoedu.framework.communication.api.communicator.type.mediator.IMediator;
+import com.jiuaoedu.framework.communication.api.message.IMessage;
+import com.jiuaoedu.framework.communication.api.message.handler.strategy.IMessageContext;
+import com.jiuaoedu.framework.communication.api.message.handler.strategy.IMessageContextBuilder;
+import com.jiuaoedu.framework.communication.api.message.handler.strategy.IMessageHandlingStrategy;
+import com.jiuaoedu.framework.communication.api.message.handler.strategy.IMessageStrategyChain;
+import com.jiuaoedu.framework.communication.core.pojo.Message;
+import com.jiuaoedu.framework.communication.core.pojo.MessageBuilder;
 import com.jiuaoedu.framework.communication.core.exception.MessageHandlingException;
-import com.jiuaoedu.framework.handler.api.IHandler;
-import com.jiuaoedu.framework.handler.api.IHandlerChain;
-import com.jiuaoedu.framework.handler.core.HandlerChain;
+import com.jiuaoedu.framework.communication.core.pojo.MessageContextBuilder;
+import com.jiuaoedu.framework.communication.extension.strategy.MessageStrategyChain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class SystemMediator implements Mediator {
+public class SystemMediator implements IMediator {
     private static final Logger log = LoggerFactory.getLogger(SystemMediator.class);
     private final Map<String, Communicable> components = new ConcurrentHashMap<>();
     private final Map<String, Long> messageStats = new HashMap<>();
-    private final IHandlerChain<Message> strategyChain;
+    private final IMessageStrategyChain strategyChain;
+    private final IMessageContextBuilder messageContextBuilder;
 
     public SystemMediator() {
         // 构建策略链
-        strategyChain = new HandlerChain<>();
+        strategyChain = new MessageStrategyChain();
+        messageContextBuilder = new MessageContextBuilder();
     }
 
-    public SystemMediator(IHandlerChain<Message> messageHandlerChain) {
+    public SystemMediator(IMessageStrategyChain messageHandlerChain) {
         this.strategyChain = messageHandlerChain;
-    }
-
-    public SystemMediator(List<IHandler<Message>> handlers) {
-        this.strategyChain = buildChain(handlers);
-    }
-
-    private IHandlerChain<Message> buildChain(List<IHandler<Message>> handlers) {
-        if (handlers.isEmpty()) return new HandlerChain<>();
-        IHandlerChain<Message> chain = new HandlerChain<>();
-        for (int i = 0; i < handlers.size() - 1; i++) {
-             chain.addNextHandler(handlers.get(i));
-        }
-        return chain;
+        messageContextBuilder = new MessageContextBuilder();
     }
 
     @Override
@@ -61,8 +54,9 @@ public class SystemMediator implements Mediator {
     }
 
     @Override
-    public void dispatchMessage(Message message) {
+    public void dispatchMessage(IMessage message) {
         updateMessageStats(message.getType().name());
+        IMessageContext messageContext = messageContextBuilder.buildFromOriginalMessage(message);
         
         Communicable receiver = components.get(message.getReceiverId());
         if (receiver == null) {
@@ -72,7 +66,7 @@ public class SystemMediator implements Mediator {
         }
         try {
             // 先让消息处理器链处理消息
-            strategyChain.process(message);
+            strategyChain.process(messageContext);
             // 处理完后再发送消息给接收者
             receiver.receiveMessage(message);
         } catch (MessageHandlingException e) {
@@ -81,7 +75,7 @@ public class SystemMediator implements Mediator {
         }
     }
 
-    private void sendErrorMessage(Message originalMessage, String errorMessageContent) {
+    private void sendErrorMessage(IMessage originalMessage, String errorMessageContent) {
         Message errorMessage = new MessageBuilder()
                 .fromMessage(originalMessage)
                 .from("系统")

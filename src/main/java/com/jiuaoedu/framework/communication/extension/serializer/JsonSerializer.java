@@ -5,7 +5,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import com.jiuaoedu.framework.communication.api.message.Message;
+import com.jiuaoedu.framework.communication.api.message.IMessage;
+import com.jiuaoedu.framework.communication.core.pojo.Message;
 import com.jiuaoedu.framework.communication.api.message.MessageType;
 import com.jiuaoedu.framework.communication.api.message.serializer.MessageSerializer;
 
@@ -25,13 +26,13 @@ public class JsonSerializer implements MessageSerializer {
     }
 
     @Override
-    public String serialize(Message message) {
+    public String serialize(IMessage message) {
         return gson.toJson(message);
     }
 
     @Override
-    public Message deserialize(String serializedMessage) {
-        return gson.fromJson(serializedMessage, Message.class);
+    public IMessage deserialize(String serializedMessage) {
+        return gson.fromJson(serializedMessage, IMessage.class);
     }
 
     private static class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {

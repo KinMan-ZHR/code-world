@@ -10,7 +10,7 @@ import com.jiuaoedu.framework.handler.api.IHandler;
 public class Handler<T> implements IHandler<T> {
 
     @Override
-    public boolean canHandle(T message) {
+    public boolean canHandle(T t) {
         return true;
     }
 

@@ -5,6 +5,6 @@ package com.jiuaoedu.framework.handler.api;
  * @since 2025/7/25 17:06
  */
 public interface IHandler<T> {
-    boolean canHandle(T message);
+    boolean canHandle(T t);
     void handle(T t);
 }

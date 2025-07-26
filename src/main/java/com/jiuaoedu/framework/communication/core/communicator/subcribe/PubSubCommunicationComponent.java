@@ -1,9 +1,10 @@
-package com.jiuaoedu.framework.communication.core.communication_component.subcribe;
+package com.jiuaoedu.framework.communication.core.communicator.subcribe;
 
 import com.jiuaoedu.framework.communication.api.communicator.Communicable;
-import com.jiuaoedu.framework.communication.api.communicator.type.subcribe.EventBus;
+import com.jiuaoedu.framework.communication.api.communicator.type.subcribe.IEventBus;
 import com.jiuaoedu.framework.communication.api.communicator.type.subcribe.TopicSubscribable;
-import com.jiuaoedu.framework.communication.api.message.Message;
+import com.jiuaoedu.framework.communication.api.message.IMessage;
+import com.jiuaoedu.framework.communication.core.pojo.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,11 +18,11 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class PubSubCommunicationComponent implements Communicable, TopicSubscribable {
     private final String componentId;
-    private final EventBus eventBus;
+    private final IEventBus eventBus;
     private final Set<String> subscribedTopics = ConcurrentHashMap.newKeySet();
     private static final Logger logger = LoggerFactory.getLogger(PubSubCommunicationComponent.class);
 
-    public PubSubCommunicationComponent(String componentId, EventBus eventBus) {
+    public PubSubCommunicationComponent(String componentId, IEventBus eventBus) {
         this.componentId = componentId;
         this.eventBus = eventBus;
     }
@@ -46,7 +47,7 @@ public class PubSubCommunicationComponent implements Communicable, TopicSubscrib
     }
 
     @Override
-    public void sendMessage(Message message) {
+    public void sendMessage(IMessage message) {
         // 在发布订阅模式中，receiverId 被视为主题
         String topic = message.getReceiverId();
         logger.info("[发布消息] {} -> 主题:{} [{}]: {}",
@@ -59,7 +60,7 @@ public class PubSubCommunicationComponent implements Communicable, TopicSubscrib
     }
 
     @Override
-    public void receiveMessage(Message message) {
+    public void receiveMessage(IMessage message) {
         // 只处理订阅的主题
         if (subscribedTopics.contains(message.getReceiverId())) {
             logger.info("[订阅接收] {} <- 主题:{} [{}]: {}",
@@ -77,7 +78,7 @@ public class PubSubCommunicationComponent implements Communicable, TopicSubscrib
         return componentId;
     }
 
-    protected void processMessage(Message message) {
+    protected void processMessage(IMessage message) {
         // 由子类实现具体消息处理逻辑
     }
 }

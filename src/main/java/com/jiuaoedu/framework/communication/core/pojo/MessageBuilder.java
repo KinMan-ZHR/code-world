@@ -1,18 +1,21 @@
-package com.jiuaoedu.framework.communication.api.message;
+package com.jiuaoedu.framework.communication.core.pojo;
 
-import com.jiuaoedu.framework.communication.api.message.protocol.DefaultMessageProtocol;
-import com.jiuaoedu.framework.communication.api.message.protocol.MessageProtocol;
+import com.jiuaoedu.framework.communication.api.message.IMessage;
+import com.jiuaoedu.framework.communication.api.message.IMessageBuilder;
+import com.jiuaoedu.framework.communication.api.message.MessageType;
+import com.jiuaoedu.framework.communication.core.protocol.DefaultMessageProtocol;
+import com.jiuaoedu.framework.communication.api.message.protocol.IMessageProtocol;
 import com.jiuaoedu.framework.communication.core.exception.MessageCreationException;
 
-public class MessageBuilder {
+public class MessageBuilder implements IMessageBuilder {
     private String senderId;
     private String receiverId;
     private String content = "";
     private MessageType type;
     private String operationType = "";
-    private final MessageProtocol protocol;
+    private final IMessageProtocol protocol;
 
-    public MessageBuilder(MessageProtocol protocol) {
+    public MessageBuilder(IMessageProtocol protocol) {
         this.protocol = protocol;
     }
 
@@ -45,7 +48,7 @@ public class MessageBuilder {
         return this;
     }
 
-    public MessageBuilder fromMessage(Message message) {
+    public MessageBuilder fromMessage(IMessage message) {
         this.senderId = message.getSenderId();
         this.receiverId = message.getReceiverId();
         this.content = message.getContent();

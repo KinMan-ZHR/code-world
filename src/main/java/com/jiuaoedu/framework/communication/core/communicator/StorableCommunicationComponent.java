@@ -1,9 +1,9 @@
-package com.jiuaoedu.framework.communication.core.communication_component;
+package com.jiuaoedu.framework.communication.core.communicator;
 
 import com.jiuaoedu.framework.communication.api.communicator.Communicable;
 import com.jiuaoedu.framework.communication.api.communicator.extension.MessageStorable;
 import com.jiuaoedu.framework.communication.api.communicator.extension.StorableCommunicable;
-import com.jiuaoedu.framework.communication.api.message.Message;
+import com.jiuaoedu.framework.communication.api.message.IMessage;
 
 import java.util.Map;
 
@@ -22,17 +22,17 @@ public class StorableCommunicationComponent implements StorableCommunicable {
     }
 
     @Override
-    public void storeValue(Message value) {
+    public void storeValue(IMessage value) {
         messageStorage.storeValue(value);
     }
 
     @Override
-    public Message getValue(String key) {
+    public IMessage getValue(String key) {
         return messageStorage.getValue(key);
     }
 
     @Override
-    public Map<String, Message> getAllValues() {
+    public Map<String, IMessage> getAllValues() {
         return messageStorage.getAllValues();
     }
 
@@ -52,12 +52,12 @@ public class StorableCommunicationComponent implements StorableCommunicable {
     }
 
     @Override
-    public void sendMessage(Message message) {
+    public void sendMessage(IMessage message) {
         communicator.sendMessage(message);
     }
 
     @Override
-    public void doReceiveMessage(Message message) {
+    public void doReceiveMessage(IMessage message) {
         communicator.receiveMessage(message);
     }
 

@@ -1,7 +1,8 @@
 package com.jiuaoedu.framework.communication.extension.serializer;
 
-import com.jiuaoedu.framework.communication.api.message.Message;
-import com.jiuaoedu.framework.communication.api.message.MessageBuilder;
+import com.jiuaoedu.framework.communication.api.message.IMessage;
+import com.jiuaoedu.framework.communication.core.pojo.Message;
+import com.jiuaoedu.framework.communication.core.pojo.MessageBuilder;
 import com.jiuaoedu.framework.communication.api.message.MessageType;
 import com.jiuaoedu.framework.communication.api.message.serializer.MessageSerializer;
 import org.w3c.dom.Document;
@@ -22,9 +23,17 @@ import java.time.format.DateTimeFormatter;
 
 public class XmlSerializer implements MessageSerializer {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+    private final MessageBuilder messageBuilder;
+    public XmlSerializer() {
+        this.messageBuilder = new MessageBuilder();
+    }
+
+    public XmlSerializer(MessageBuilder messageBuilder) {
+        this.messageBuilder = messageBuilder;
+    }
 
     @Override
-    public String serialize(Message message) {
+    public String serialize(IMessage message) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -64,7 +73,7 @@ public class XmlSerializer implements MessageSerializer {
             String content = getElementValue(doc, "content");
             MessageType type = MessageType.valueOf(getElementValue(doc, "type"));
 
-            return new MessageBuilder()
+            return messageBuilder
                     .from(senderId)
                     .to(receiverId)
                     .withContent(content)

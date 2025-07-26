@@ -1,8 +1,10 @@
-package com.jiuaoedu.framework.communication.api.message.protocol;
+package com.jiuaoedu.framework.communication.core.protocol;
+
+import com.jiuaoedu.framework.communication.api.message.protocol.IMessageProtocol;
 
 import java.util.regex.Pattern;
 
-public class DefaultMessageProtocol implements MessageProtocol {
+public class DefaultMessageProtocol implements IMessageProtocol {
     private static final Pattern FORMAT_PATTERN = Pattern.compile("^[^:]+:.+$");
 
     @Override

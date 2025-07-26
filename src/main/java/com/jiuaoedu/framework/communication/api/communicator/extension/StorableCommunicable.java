@@ -1,7 +1,8 @@
 package com.jiuaoedu.framework.communication.api.communicator.extension;
 
 import com.jiuaoedu.framework.communication.api.communicator.Communicable;
-import com.jiuaoedu.framework.communication.api.message.Message;
+import com.jiuaoedu.framework.communication.api.message.IMessage;
+import com.jiuaoedu.framework.communication.core.pojo.Message;
 
 /**
  * 接口增强：可存储消息的通信组件
@@ -10,10 +11,10 @@ import com.jiuaoedu.framework.communication.api.message.Message;
  */
 public interface StorableCommunicable extends Communicable, MessageStorable {
     @Override
-    default void receiveMessage(Message message) {
+    default void receiveMessage(IMessage message) {
         storeValue(message);  // 强制存储（所有实现类必须遵守）
         doReceiveMessage(message);  // 委托给具体实现
     }
     
-    void doReceiveMessage(Message message);  // 由实现类实现后续处理
+    void doReceiveMessage(IMessage message);  // 由实现类实现后续处理
 }

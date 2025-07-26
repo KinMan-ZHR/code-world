@@ -1,20 +1,22 @@
-package com.jiuaoedu.framework.communication.api.message;
+package com.jiuaoedu.framework.communication.core.pojo;
 
-import com.jiuaoedu.framework.communication.api.message.protocol.MessageProtocol;
+import com.jiuaoedu.framework.communication.api.message.IMessage;
+import com.jiuaoedu.framework.communication.api.message.MessageType;
+import com.jiuaoedu.framework.communication.api.message.protocol.IMessageProtocol;
 import com.jiuaoedu.framework.communication.utils.IdGenerator;
 
 import java.time.LocalDateTime;
 
-public class Message {
+public class Message implements IMessage {
     private final String senderId;
     private final String receiverId;
     private final String content;
     private final MessageType type;
     private final LocalDateTime timestamp;
     private final String messageId;
-    private final MessageProtocol protocol;
+    private final IMessageProtocol protocol;
 
-    protected Message(String senderId, String receiverId, String content, MessageType type, MessageProtocol protocol) {
+    protected Message(String senderId, String receiverId, String content, MessageType type, IMessageProtocol protocol) {
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.content = content;

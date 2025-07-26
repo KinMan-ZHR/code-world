@@ -1,11 +1,11 @@
-package com.jiuaoedu.framework.communication.core.communication_component.mediator.mediators;
+package com.jiuaoedu.framework.communication.core.communicator.mediator.mediators;
 
 import com.jiuaoedu.framework.communication.api.communicator.Communicable;
 import com.jiuaoedu.framework.communication.api.communicator.type.mediator.ISecureMediator;
-import com.jiuaoedu.framework.communication.api.communicator.type.mediator.Mediator;
-import com.jiuaoedu.framework.communication.api.message.Message;
+import com.jiuaoedu.framework.communication.api.communicator.type.mediator.IMediator;
+import com.jiuaoedu.framework.communication.api.message.IMessage;
 import com.jiuaoedu.framework.communication.extension.interceptor.AuthInterceptor;
-import com.jiuaoedu.framework.communication.api.interceptor.MessageInterceptor;
+import com.jiuaoedu.framework.communication.api.interceptor.IMessageInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,16 +14,16 @@ import java.util.List;
 
 public class SecureMediator implements ISecureMediator {
     private static final Logger log = LoggerFactory.getLogger(SecureMediator.class);
-    private final Mediator delegate;
-    private final List<MessageInterceptor> interceptors = new ArrayList<>();
+    private final IMediator delegate;
+    private final List<IMessageInterceptor> interceptors = new ArrayList<>();
 
-    public SecureMediator(Mediator delegate) {
+    public SecureMediator(IMediator delegate) {
         this.delegate = delegate;
         // 添加默认安全拦截器
         interceptors.add(new AuthInterceptor());
     }
 
-    public void addInterceptor(MessageInterceptor interceptor) {
+    public void addInterceptor(IMessageInterceptor interceptor) {
         interceptors.add(interceptor);
     }
 
@@ -38,8 +38,8 @@ public class SecureMediator implements ISecureMediator {
     }
 
     @Override
-    public void dispatchMessage(Message message) {
-        for (MessageInterceptor interceptor : interceptors) {
+    public void dispatchMessage(IMessage message) {
+        for (IMessageInterceptor interceptor : interceptors) {
             if (!interceptor.preHandle(message)) {
                 log.warn("消息被拦截: {}", message);
                 return;
@@ -48,7 +48,7 @@ public class SecureMediator implements ISecureMediator {
         
         delegate.dispatchMessage(message);
         
-        for (MessageInterceptor interceptor : interceptors) {
+        for (IMessageInterceptor interceptor : interceptors) {
             interceptor.postHandle(message);
         }
     }

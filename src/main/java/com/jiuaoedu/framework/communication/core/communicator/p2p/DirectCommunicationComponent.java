@@ -1,8 +1,8 @@
-package com.jiuaoedu.framework.communication.core.communication_component.p2p;
+package com.jiuaoedu.framework.communication.core.communicator.p2p;
 
 import com.jiuaoedu.framework.communication.api.communicator.Communicable;
 import com.jiuaoedu.framework.communication.api.communicator.type.p2p.DirectConnectable;
-import com.jiuaoedu.framework.communication.api.message.Message;
+import com.jiuaoedu.framework.communication.api.message.IMessage;
 import com.jiuaoedu.framework.communication.core.exception.CommunicationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +51,7 @@ public class DirectCommunicationComponent implements Communicable, DirectConnect
     }
 
     @Override
-    public void sendMessage(Message message) {
+    public void sendMessage(IMessage message) {
         Communicable receiver = connectedPeers.get(message.getReceiverId());
         if (receiver == null) {
             throw new CommunicationException("未连接到目标 peer - " + message.getReceiverId());
@@ -67,7 +67,7 @@ public class DirectCommunicationComponent implements Communicable, DirectConnect
     }
 
     @Override
-    public void receiveMessage(Message message) {
+    public void receiveMessage(IMessage message) {
         logger.info("[点对点接收] {} <- {} [{}]: {}",
                 getComponentId(),
                 message.getSenderId(),
@@ -82,7 +82,7 @@ public class DirectCommunicationComponent implements Communicable, DirectConnect
         return componentId;
     }
 
-    protected void processMessage(Message message) {
+    protected void processMessage(IMessage message) {
         // 由子类实现具体消息处理逻辑
     }
 }
