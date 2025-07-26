@@ -1,5 +1,6 @@
-package com.jiuaoedu.framework.communication.api.message.handler.strategy;
+package com.jiuaoedu.framework.communication.api.message.context.handler.strategy;
 
+import com.jiuaoedu.framework.communication.api.message.context.IMessageContext;
 import com.jiuaoedu.framework.handler.api.IHandlerChain;
 
 /**

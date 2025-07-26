@@ -3,9 +3,10 @@ package com.jiuaoedu.framework.communication.core.communicator.mediator.mediator
 import com.jiuaoedu.framework.communication.api.communicator.Communicable;
 import com.jiuaoedu.framework.communication.api.communicator.type.mediator.IMediator;
 import com.jiuaoedu.framework.communication.api.message.IMessage;
-import com.jiuaoedu.framework.communication.api.message.handler.strategy.IMessageContext;
-import com.jiuaoedu.framework.communication.api.message.handler.strategy.IMessageContextBuilder;
-import com.jiuaoedu.framework.communication.api.message.handler.strategy.IMessageStrategyChain;
+import com.jiuaoedu.framework.communication.api.message.MessageType;
+import com.jiuaoedu.framework.communication.api.message.context.IMessageContext;
+import com.jiuaoedu.framework.communication.api.message.context.IMessageContextBuilder;
+import com.jiuaoedu.framework.communication.api.message.context.handler.strategy.IMessageStrategyChain;
 import com.jiuaoedu.framework.communication.core.pojo.Message;
 import com.jiuaoedu.framework.communication.core.pojo.MessageBuilder;
 import com.jiuaoedu.framework.communication.core.exception.MessageHandlingException;
@@ -55,22 +56,19 @@ public class SystemMediator implements IMediator {
     @Override
     public void dispatchMessage(IMessage message) {
         updateMessageStats(message.getType().name());
-        IMessageContext messageContext = messageContextBuilder.buildFromOriginalMessage(message);
-        
         Communicable receiver = components.get(message.getReceiverId());
         if (receiver == null) {
-            log.error("错误: 接收者不存在 - {}", message.getReceiverId());
-            sendErrorMessage(message, "接收者不存在");
+            sendErrorMessage(message, "接收者不存在 -" + message.getReceiverId());
             return;
         }
         try {
+            IMessageContext messageContext = messageContextBuilder.buildFromOriginalMessage(message);
             // 先让消息处理器链处理消息
             strategyChain.process(messageContext);
             // 处理完后再发送消息给接收者
-            receiver.receiveMessage(message);
+            receiver.receiveMessage(messageContext.getProcessedMessage());
         } catch (MessageHandlingException e) {
-            log.error("消息处理异常: {}", e.getMessage());
-            sendErrorMessage(message, "消息处理异常");
+            sendErrorMessage(message, "消息处理异常:" + e.getMessage());
         }
     }
 
@@ -78,7 +76,9 @@ public class SystemMediator implements IMediator {
         Message errorMessage = new MessageBuilder()
                 .fromMessage(originalMessage)
                 .from("系统")
-                .withContent(errorMessageContent + originalMessage.getContent())
+                .withContent(errorMessageContent)
+                .ofType(MessageType.ERROR)
+                .signOperationType("error")
                 .build();
         Communicable sender = components.get(originalMessage.getSenderId());
         if (sender != null) {

@@ -1,4 +1,4 @@
-package com.jiuaoedu.framework.communication.api.message.handler.strategy;
+package com.jiuaoedu.framework.communication.api.message.context;
 
 import com.jiuaoedu.framework.communication.api.message.IMessage;
 
@@ -17,10 +17,20 @@ public interface IMessageContext {
 
     void setTargetComponentId(String targetComponentId);
 
+    /**
+     * 是否需要转发
+     *
+     * @return true: 需要转发
+     */
     boolean shouldForward();
 
     void setShouldForward(boolean shouldForward);
 
+    /**
+     * 是否已经处理
+     *
+     * @return true: 已经处理
+     */
     boolean isHandled();
 
     void setHandled(boolean handled);

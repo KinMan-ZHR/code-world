@@ -15,7 +15,7 @@ public class MediatorTest {
         CustomMediatorRegistrableComponent componentA = new CustomMediatorRegistrableComponent("ComponentA");
         CustomMediatorRegistrableComponent componentB = new CustomMediatorRegistrableComponent("ComponentB");
         RequestResponseStrategy requestResponseStrategy = new RequestResponseStrategy(new MessageBuilder());
-        requestResponseStrategy.registerRequestHandler("SYN", new RequestHandler(componentB));
+        requestResponseStrategy.registerRequestHandler("SYN", new RequestContextHandler());
         IMediator mediator = new SystemMediator(new MessageStrategyChain(requestResponseStrategy));
         // 注册组件到中介者
         componentA.registerToMediator(mediator);
@@ -26,30 +26,10 @@ public class MediatorTest {
         Message synMessage = new MessageBuilder()
                 .from("ComponentA")
                 .to("ComponentB")
-                .ofType(MessageType.REQUEST)
+                .ofType(MessageType.SYN)
                 .withContent("SYN 消息")
                 .signOperationType("SYN")
                 .build();
         componentA.sendMessage(synMessage);
-
-        // 第二次握手：ComponentB 发送 SYN+ACK 到 ComponentA
-        Message synAckMessage = new MessageBuilder()
-                .from("ComponentB")
-                .to("ComponentA")
-                .ofType(MessageType.REQUEST)
-                .withContent("SYN+ACK 消息")
-                .signOperationType("SYN+ACK")
-                .build();
-        componentB.sendMessage(synAckMessage);
-
-        // 第三次握手：ComponentA 发送 ACK 到 ComponentB
-        Message ackMessage = new MessageBuilder()
-                .from("ComponentA")
-                .to("ComponentB")
-                .ofType(MessageType.REQUEST)
-                .withContent("ACK 消息")
-                .signOperationType("ACK")
-                .build();
-        componentA.sendMessage(ackMessage);
     }
 }

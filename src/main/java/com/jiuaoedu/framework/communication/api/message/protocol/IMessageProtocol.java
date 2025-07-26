@@ -1,7 +1,9 @@
 package com.jiuaoedu.framework.communication.api.message.protocol;
 
 public interface IMessageProtocol {
-    String generateContentWithOperationType(String content, String operationType);
-    String extractOperationType(String content);
     boolean validateFormat(String content);
+
+    String generateContentWithCorrelationId(String content, String correlationId);
+
+    String extractCorrelationId(String content);
 }

@@ -1,5 +1,7 @@
 package com.jiuaoedu.framework.communication.api.message;
 
+import com.jiuaoedu.framework.communication.api.message.protocol.IMessageProtocol;
+
 import java.time.LocalDateTime;
 
 /**
@@ -14,4 +16,5 @@ public interface IMessage {
     LocalDateTime getTimestamp();
     String getMessageId();
     String getOperationType();
+    IMessageProtocol getProtocol();
 }

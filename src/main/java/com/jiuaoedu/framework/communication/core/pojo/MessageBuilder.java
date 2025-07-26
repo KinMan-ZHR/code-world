@@ -3,16 +3,16 @@ package com.jiuaoedu.framework.communication.core.pojo;
 import com.jiuaoedu.framework.communication.api.message.IMessage;
 import com.jiuaoedu.framework.communication.api.message.IMessageBuilder;
 import com.jiuaoedu.framework.communication.api.message.MessageType;
-import com.jiuaoedu.framework.communication.core.protocol.DefaultMessageProtocol;
+import com.jiuaoedu.framework.communication.core.protocol.CorrelationMessageProtocol;
 import com.jiuaoedu.framework.communication.api.message.protocol.IMessageProtocol;
 import com.jiuaoedu.framework.communication.core.exception.MessageCreationException;
 
 public class MessageBuilder implements IMessageBuilder {
     private String senderId;
     private String receiverId;
-    private String content = "";
+    private String content = null;
     private MessageType type;
-    private String operationType = "";
+    private String operationType = null;
     private final IMessageProtocol protocol;
 
     public MessageBuilder(IMessageProtocol protocol) {
@@ -20,7 +20,7 @@ public class MessageBuilder implements IMessageBuilder {
     }
 
     public MessageBuilder() {
-        this.protocol = new DefaultMessageProtocol();
+        this.protocol = new CorrelationMessageProtocol();
     }
 
     public MessageBuilder from(String senderId) {
@@ -53,14 +53,13 @@ public class MessageBuilder implements IMessageBuilder {
         this.receiverId = message.getReceiverId();
         this.content = message.getContent();
         this.type = message.getType();
-        this.operationType = protocol.extractOperationType(content);
+        this.operationType = message.getOperationType();
         return this;
     }
 
     public Message build() {
-        content = protocol.generateContentWithOperationType(content, operationType);
         validate();
-        return new Message(senderId, receiverId, content, type, protocol);
+        return new Message(senderId, receiverId, content, type, operationType, protocol);
     }
 
     private void validate() {
@@ -72,9 +71,6 @@ public class MessageBuilder implements IMessageBuilder {
         }
         if (type == null) {
             throw new MessageCreationException("Message type cannot be null");
-        }
-        if (!protocol.validateFormat(content)) {
-            throw new MessageCreationException("Invalid message format");
         }
     }
 }

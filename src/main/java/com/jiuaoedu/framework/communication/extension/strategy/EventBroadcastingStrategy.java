@@ -1,10 +1,9 @@
 package com.jiuaoedu.framework.communication.extension.strategy;
 
 import com.jiuaoedu.framework.communication.api.message.IMessage;
-import com.jiuaoedu.framework.communication.api.message.handler.IMessageHandler;
-import com.jiuaoedu.framework.communication.api.message.handler.strategy.IMessageContext;
-import com.jiuaoedu.framework.communication.api.message.handler.strategy.IMessageHandlingStrategy;
-import com.jiuaoedu.framework.communication.core.pojo.Message;
+import com.jiuaoedu.framework.communication.api.message.context.handler.IMessageContextHandler;
+import com.jiuaoedu.framework.communication.api.message.context.IMessageContext;
+import com.jiuaoedu.framework.communication.api.message.context.handler.strategy.IMessageHandlingStrategy;
 import com.jiuaoedu.framework.communication.api.message.MessageType;
 
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class EventBroadcastingStrategy implements IMessageHandlingStrategy {
-    private final Map<String, List<IMessageHandler>> eventListeners = new ConcurrentHashMap<>();
+    private final Map<String, List<IMessageContextHandler>> eventListeners = new ConcurrentHashMap<>();
 
     @Override
     public boolean canHandle(IMessageContext messageContext) {
@@ -24,19 +23,19 @@ public class EventBroadcastingStrategy implements IMessageHandlingStrategy {
     public void handle(IMessageContext messageContext) {
         IMessage message = messageContext.getOriginalMessage();
         String eventType = extractEventType(message.getContent());
-        List<IMessageHandler> handlers = eventListeners.getOrDefault(eventType, new ArrayList<>());
+        List<IMessageContextHandler> handlers = eventListeners.getOrDefault(eventType, new ArrayList<>());
         
-        for (IMessageHandler handler : handlers) {
-            handler.handle(message);
+        for (IMessageContextHandler handler : handlers) {
+            handler.handle(messageContext);
         }
     }
 
-    public void addEventListener(String eventType, IMessageHandler listener) {
+    public void addEventListener(String eventType, IMessageContextHandler listener) {
         eventListeners.computeIfAbsent(eventType, k -> new ArrayList<>()).add(listener);
     }
 
-    public void removeEventListener(String eventType, IMessageHandler listener) {
-        List<IMessageHandler> handlers = eventListeners.get(eventType);
+    public void removeEventListener(String eventType, IMessageContextHandler listener) {
+        List<IMessageContextHandler> handlers = eventListeners.get(eventType);
         if (handlers != null) {
             handlers.remove(listener);
         }

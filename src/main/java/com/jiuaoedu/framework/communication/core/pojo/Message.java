@@ -14,9 +14,10 @@ public class Message implements IMessage {
     private final MessageType type;
     private final LocalDateTime timestamp;
     private final String messageId;
+    private final String operationType;
     private final IMessageProtocol protocol;
 
-    protected Message(String senderId, String receiverId, String content, MessageType type, IMessageProtocol protocol) {
+    protected Message(String senderId, String receiverId, String content, MessageType type, String operationType, IMessageProtocol protocol) {
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.content = content;
@@ -24,6 +25,7 @@ public class Message implements IMessage {
         this.timestamp = LocalDateTime.now();
         this.messageId = generateUniqueId();
         this.protocol = protocol;
+        this.operationType = operationType;
     }
 
     private String generateUniqueId() {
@@ -36,7 +38,10 @@ public class Message implements IMessage {
     public LocalDateTime getTimestamp() { return timestamp; }
     public String getMessageId() { return messageId; }
     public String getOperationType() {
-        return protocol.extractOperationType(content);
+        return operationType;
+    }
+    public IMessageProtocol getProtocol() {
+        return protocol;
     }
 
     @Override

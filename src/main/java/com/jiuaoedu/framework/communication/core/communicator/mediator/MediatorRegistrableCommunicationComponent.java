@@ -32,7 +32,7 @@ public class MediatorRegistrableCommunicationComponent implements Communicable, 
 
     @Override
     public final void receiveMessage(IMessage message) {
-        logger.info("[接收] {} -> {} [{}]: {}",
+        logger.info("[接收] {} <- {} [{}]: {}",
                 getComponentId(),
                 message.getSenderId(),
                 message.getType(),

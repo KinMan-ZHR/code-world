@@ -4,7 +4,6 @@ import com.jiuaoedu.framework.communication.api.communicator.Communicable;
 import com.jiuaoedu.framework.communication.api.communicator.type.subcribe.IEventBus;
 import com.jiuaoedu.framework.communication.api.communicator.type.subcribe.TopicSubscribable;
 import com.jiuaoedu.framework.communication.api.message.IMessage;
-import com.jiuaoedu.framework.communication.core.pojo.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

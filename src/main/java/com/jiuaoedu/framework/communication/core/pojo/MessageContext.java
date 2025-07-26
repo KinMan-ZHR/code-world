@@ -1,7 +1,7 @@
 package com.jiuaoedu.framework.communication.core.pojo;
 
 import com.jiuaoedu.framework.communication.api.message.IMessage;
-import com.jiuaoedu.framework.communication.api.message.handler.strategy.IMessageContext;
+import com.jiuaoedu.framework.communication.api.message.context.IMessageContext;
 
 /**
  * @author ZhangHaoRan or KinMan Zhang

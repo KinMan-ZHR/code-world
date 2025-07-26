@@ -1,7 +1,7 @@
 package com.jiuaoedu.framework.communication.extension.strategy;
 
-import com.jiuaoedu.framework.communication.api.message.handler.strategy.IMessageContext;
-import com.jiuaoedu.framework.communication.api.message.handler.strategy.IMessageStrategyChain;
+import com.jiuaoedu.framework.communication.api.message.context.IMessageContext;
+import com.jiuaoedu.framework.communication.api.message.context.handler.strategy.IMessageStrategyChain;
 import com.jiuaoedu.framework.handler.api.IHandler;
 
 import java.util.ArrayList;
