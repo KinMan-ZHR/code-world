@@ -2,7 +2,6 @@ package com.jiuaoedu.framework.communication.api.communicator.extension;
 
 import com.jiuaoedu.framework.communication.api.communicator.Communicable;
 import com.jiuaoedu.framework.communication.api.message.IMessage;
-import com.jiuaoedu.framework.communication.core.pojo.Message;
 
 /**
  * 接口增强：可存储消息的通信组件

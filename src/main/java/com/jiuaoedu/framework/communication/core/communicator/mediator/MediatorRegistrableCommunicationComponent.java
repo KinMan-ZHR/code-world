@@ -4,7 +4,6 @@ import com.jiuaoedu.framework.communication.api.communicator.Communicable;
 import com.jiuaoedu.framework.communication.api.communicator.type.mediator.MediatorRegistrable;
 import com.jiuaoedu.framework.communication.api.communicator.type.mediator.IMediator;
 import com.jiuaoedu.framework.communication.api.message.IMessage;
-import com.jiuaoedu.framework.communication.core.pojo.Message;
 import com.jiuaoedu.framework.communication.core.exception.CommunicationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
