@@ -13,9 +13,9 @@ public interface IMessageContext {
 
     void setProcessedMessage(IMessage processedMessage);
 
-    String getTargetComponentId();
+    IMessageStateTracker getMessageStateTracker();
 
-    void setTargetComponentId(String targetComponentId);
+    void setMessageStateTracker(IMessageStateTracker messageStateTracker);
 
     /**
      * 是否需要转发

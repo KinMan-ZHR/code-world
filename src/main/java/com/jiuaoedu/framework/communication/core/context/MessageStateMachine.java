@@ -3,6 +3,8 @@ package com.jiuaoedu.framework.communication.core.context;
 import com.jiuaoedu.framework.communication.api.message.IMessage;
 import com.jiuaoedu.framework.communication.api.message.MessageType;
 import com.jiuaoedu.framework.communication.api.message.context.IMessageStateMachine;
+import com.jiuaoedu.framework.communication.api.message.context.IMessageStateTracker;
+import com.jiuaoedu.framework.communication.api.message.context.MessageState;
 import com.jiuaoedu.framework.communication.core.protocol.CorrelationMessageProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +48,7 @@ public class MessageStateMachine implements IMessageStateMachine {
     }
 
     @Override
-    public MessageStateTracker createRequestTracker(IMessage request, long timeout) {
+    public IMessageStateTracker createRequestTracker(IMessage request, long timeout) {
         if (request.getType() != MessageType.REQUEST) {
             throw new IllegalArgumentException("只能为REQUEST类型的消息创建跟踪器");
         }
@@ -155,7 +157,7 @@ public class MessageStateMachine implements IMessageStateMachine {
     /**
      * 消息状态跟踪器实现
      */
-    private static class MessageStateTrackerImpl implements MessageStateTracker {
+    private static class MessageStateTrackerImpl implements IMessageStateTracker {
 
         private final IMessage request;
         private final String correlationId;

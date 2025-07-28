@@ -2,6 +2,7 @@ package com.jiuaoedu.framework.communication.extension.strategy;
 
 import com.jiuaoedu.framework.communication.api.message.IMessage;
 import com.jiuaoedu.framework.communication.api.message.context.IMessageContext;
+import com.jiuaoedu.framework.communication.api.message.context.IMessageStateTracker;
 import com.jiuaoedu.framework.communication.api.message.context.handler.IMessageContextHandler;
 import com.jiuaoedu.framework.communication.api.message.context.IMessageStateMachine;
 import com.jiuaoedu.framework.communication.api.message.context.handler.strategy.IMessageHandlingStrategy;
@@ -84,7 +85,7 @@ public class RequestResponseStrategy implements IMessageHandlingStrategy {
                 .build();
         
         // 创建状态跟踪器
-        IMessageStateMachine.MessageStateTracker tracker = stateMachine.createRequestTracker(enrichedRequest, 30000);
+        IMessageStateTracker tracker = stateMachine.createRequestTracker(enrichedRequest, 30000);
         if (tracker != null) {
             // 保存跟踪器引用，以便后续处理
             messageContext.setResult(tracker);

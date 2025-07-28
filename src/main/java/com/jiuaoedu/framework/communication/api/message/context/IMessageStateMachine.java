@@ -2,9 +2,6 @@ package com.jiuaoedu.framework.communication.api.message.context;
 
 import com.jiuaoedu.framework.communication.api.message.IMessage;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
-
 /**
  * 消息状态机接口
  * 用于管理请求-响应的状态转换和生命周期
@@ -14,16 +11,7 @@ import java.util.concurrent.TimeUnit;
  */
 public interface IMessageStateMachine {
     
-    /**
-     * 消息状态枚举
-     */
-    enum MessageState {
-        PENDING,    // 等待响应
-        RESPONDED,  // 已收到响应
-        TIMEOUT,    // 超时
-        ERROR,      // 错误
-        CANCELLED   // 已取消
-    }
+
     
     /**
      * 创建新的请求状态跟踪
@@ -32,7 +20,7 @@ public interface IMessageStateMachine {
      * @param timeout 超时时间（毫秒）
      * @return 状态跟踪器
      */
-    MessageStateTracker createRequestTracker(IMessage request, long timeout);
+    IMessageStateTracker createRequestTracker(IMessage request, long timeout);
     
     /**
      * 处理响应消息
@@ -61,64 +49,4 @@ public interface IMessageStateMachine {
      * @return 活跃请求数量
      */
     int getActiveRequestCount();
-    
-    /**
-     * 消息状态跟踪器
-     */
-    interface MessageStateTracker {
-        
-        /**
-         * 获取关联ID
-         */
-        String getCorrelationId();
-        
-        /**
-         * 获取当前状态
-         */
-        MessageState getState();
-        
-        /**
-         * 获取原始请求
-         */
-        IMessage getRequest();
-        
-        /**
-         * 获取响应（如果已收到）
-         */
-        IMessage getResponse();
-        
-        /**
-         * 获取错误消息（如果有）
-         */
-        IMessage getError();
-        
-        /**
-         * 等待响应
-         * 
-         * @param timeout 超时时间
-         * @param unit 时间单位
-         * @return 响应消息的Future
-         */
-        CompletableFuture<IMessage> waitForResponse(long timeout, TimeUnit unit);
-        
-        /**
-         * 取消请求
-         */
-        void cancel();
-        
-        /**
-         * 检查是否已超时
-         */
-        boolean isTimeout();
-        
-        /**
-         * 获取创建时间
-         */
-        long getCreatedTime();
-        
-        /**
-         * 获取最后更新时间
-         */
-        long getLastUpdatedTime();
-    }
 }

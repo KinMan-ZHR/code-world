@@ -46,8 +46,9 @@ public class CustomMediatorRegistrableComponent extends MediatorRegistrableCommu
                     .withContent("SYN+ACK 消息")
                     .signOperationType("SYN+ACK")
                     .build();
-            sendMessage(synAckMessage);
             System.out.println(this.getComponentId() + " 发送 SYN+ACK 到 " + message.getSenderId());
+            sendMessage(synAckMessage);
+
         }
         else if ("SYN+ACK".equals(operationType)) {
             // 收到SYN+ACK，发送ACK
@@ -58,8 +59,8 @@ public class CustomMediatorRegistrableComponent extends MediatorRegistrableCommu
                     .withContent("ACK 响应消息")
                     .signOperationType("ACK")
                     .build();
-            sendMessage(ackMessage);
             System.out.println(this.getComponentId() + " 发送 ACK 到 " + message.getSenderId());
+            sendMessage(ackMessage);
         }
         else if ("ACK".equals(operationType)) {
             // 收到ACK，连接建立完成
@@ -76,8 +77,8 @@ public class CustomMediatorRegistrableComponent extends MediatorRegistrableCommu
                 .withContent("处理请求: " + message.getContent())
                 .signOperationType("RESPONSE")
                 .build();
-        sendMessage(responseMessage);
         System.out.println(this.getComponentId() + " 处理请求并发送响应");
+        sendMessage(responseMessage);
     }
     
     private void handleResponseMessage(IMessage message) {

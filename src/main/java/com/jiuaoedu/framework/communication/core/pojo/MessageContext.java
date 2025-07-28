@@ -2,6 +2,7 @@ package com.jiuaoedu.framework.communication.core.pojo;
 
 import com.jiuaoedu.framework.communication.api.message.IMessage;
 import com.jiuaoedu.framework.communication.api.message.context.IMessageContext;
+import com.jiuaoedu.framework.communication.api.message.context.IMessageStateTracker;
 
 /**
  * @author ZhangHaoRan or KinMan Zhang
@@ -10,7 +11,7 @@ import com.jiuaoedu.framework.communication.api.message.context.IMessageContext;
 public class MessageContext implements IMessageContext {
     private final IMessage originalMessage;
     private IMessage processedMessage;
-    private String targetComponentId;
+    private IMessageStateTracker messageStateTracker;
     private boolean shouldForward;
     private boolean isHandled;
     private Object result;
@@ -38,13 +39,13 @@ public class MessageContext implements IMessageContext {
     }
 
     @Override
-    public String getTargetComponentId() {
-        return targetComponentId;
+    public IMessageStateTracker getMessageStateTracker() {
+        return messageStateTracker;
     }
 
     @Override
-    public void setTargetComponentId(String targetComponentId) {
-        this.targetComponentId = targetComponentId;
+    public void setMessageStateTracker(IMessageStateTracker messageStateTracker) {
+         this.messageStateTracker = messageStateTracker;
     }
 
     @Override

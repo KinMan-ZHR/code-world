@@ -17,6 +17,6 @@ public class RequestContextHandler implements IMessageContextHandler {
 
     @Override
     public void handle(IMessageContext messageContext) {
-
+        System.out.println("RequestContextHandler: " + messageContext.getOriginalMessage());
     }
 }
