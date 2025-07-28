@@ -8,7 +8,8 @@ import com.jiuaoedu.framework.communication.core.exception.CommunicationExceptio
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MediatorRegistrableCommunicationComponent implements Communicable, MediatorRegistrable {
+
+public abstract class MediatorRegistrableCommunicationComponent implements Communicable, MediatorRegistrable {
     private IMediator mediator;
     private final String componentId;
     private static final Logger logger = LoggerFactory.getLogger(MediatorRegistrableCommunicationComponent.class);
@@ -22,6 +23,13 @@ public class MediatorRegistrableCommunicationComponent implements Communicable, 
         if (mediator == null) {
             throw new CommunicationException("Mediator not set. Cannot send message.");
         }
+        
+        // 防止发送消息给自己
+        if (componentId.equals(message.getReceiverId())) {
+            logger.warn("尝试发送消息给自己，已阻止: {}", message.getMessageId());
+            return;
+        }
+        
         logger.info("[发送] {} -> {} [{}]: {}",
                 getComponentId(),
                 message.getReceiverId(),
@@ -47,27 +55,17 @@ public class MediatorRegistrableCommunicationComponent implements Communicable, 
 
     @Override
     public final void registerToMediator(IMediator mediator) {
-        if (this.mediator != null) {
-            logger.warn("组件已注册到中介者，重复注册将覆盖之前的中介者");
+        this.mediator = mediator;
+        mediator.registerComponent(this);
+    }
+
+    @Override
+    public final void unregisterFromMediator() {
+        if (mediator != null) {
+            mediator.unregisterComponent(componentId);
+            this.mediator = null;
         }
-        this.mediator = mediator;           // 设置中介者引用
-        mediator.registerComponent(this);   // 通知中介者注册
-        onRegistered();                     // 注册后的回调（子类可扩展）
     }
 
-    /**
-     * 注册后的回调方法，子类可扩展
-     */
-    protected void onRegistered() {
-        // 默认空实现，子类可重写
-    }
-
-    /**
-     * 处理消息的方法，子类可扩展
-     *
-     * @param message 要处理的消息
-     */
-    protected void processMessage(IMessage message){
-        // 默认空实现，子类可重写
-    }
+    protected abstract void processMessage(IMessage message);
 }

@@ -6,4 +6,6 @@ public interface MediatorRegistrable {
      * @param mediator 中介者实例
      */
     void registerToMediator(IMediator mediator);
+
+    void unregisterFromMediator();
 }
