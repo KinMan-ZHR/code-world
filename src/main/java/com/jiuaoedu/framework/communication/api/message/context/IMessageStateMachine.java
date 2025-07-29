@@ -10,9 +10,7 @@ import com.jiuaoedu.framework.communication.api.message.IMessage;
  * @since 2025/7/26 18:30
  */
 public interface IMessageStateMachine {
-    
 
-    
     /**
      * 创建新的请求状态跟踪
      * 
